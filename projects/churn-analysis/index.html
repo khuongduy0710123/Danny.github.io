@@ -1,1 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Telecom Customer Churn Analysis | Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A2233;
+    --ink-soft: #4A5468;
+    --paper: #F7F8FA;
+    --panel: #FFFFFF;
+    --line: #E3E6EC;
+    --teal: #2E9E86;
+    --teal-soft: #E4F3EF;
+    --orange: #D97046;
+    --orange-soft: #FBEAE1;
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
 
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; }
+  a:hover { border-bottom-color: currentColor; }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  nav.top {
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+  }
+  nav.top .wrap { display: flex; justify-content: space-between; align-items: center; }
+  nav.top .home-link { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--ink); }
+  nav.top .home-link:hover { border-bottom-color: var(--ink); }
+
+  header.hero {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 1.15;
+    margin: 0 0 20px;
+    max-width: 14ch;
+  }
+
+  .dek {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 0 28px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .stat { min-width: 120px; margin-right: 32px; }
+  .stat:last-child { margin-right: 0; }
+  .stat .n {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--teal);
+  }
+  .stat .l {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  section.step {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  section.step:last-of-type { border-bottom: none; }
+
+  .step-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .step-num {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .step p { max-width: 62ch; }
+  .step ul { max-width: 60ch; padding-left: 20px; }
+  .step li { margin-bottom: 6px; }
+
+  .embed-frame {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--panel);
+    margin-top: 20px;
+  }
+  .embed-frame iframe {
+    width: 100%;
+    height: 480px;
+    border: 0;
+    display: block;
+  }
+  .embed-caption {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+
+  .asset-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .asset-links a {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .asset-links a:hover { border-color: var(--ink); border-bottom-color: var(--ink); }
+
+  .finding-box {
+    background: var(--teal-soft);
+    border-left: 3px solid var(--teal);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-top: 8px;
+  }
+  .finding-box p {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--ink);
+  }
+  .finding-box p.support {
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .tag {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+
+  footer {
+    padding: 48px 0 64px;
+    text-align: center;
+  }
+  footer a { font-size: 14px; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #E8ECF1;
+      --ink-soft: #9AA5B5;
+      --paper: #12161F;
+      --panel: #191E2A;
+      --line: #262C3A;
+      --teal-soft: #16292A;
+      --orange-soft: #2A1D17;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #E8ECF1;
+    --ink-soft: #9AA5B5;
+    --paper: #12161F;
+    --panel: #191E2A;
+    --line: #262C3A;
+    --teal-soft: #16292A;
+    --orange-soft: #2A1D17;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    .step-title { font-size: 22px; }
+    .stat-row { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="home-link" href="../../index.html">← Portfolio</a>
+    <a class="home-link" href="https://github.com/your-username/telecom-churn-analysis" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Case study · Customer analytics</p>
+    <h1>Which customers churn, and why</h1>
+    <p class="dek">
+      A churn analysis built on real telecom customer data: a logistic regression model to
+      identify what actually predicts churn, paired with an interactive Power BI dashboard
+      for exploring who's at risk.
+    </p>
+    <div class="stat-row">
+      <div class="stat"><div class="n">6,923</div><div class="l">accounts analysed</div></div>
+      <div class="stat"><div class="n">$21.0M</div><div class="l">total revenue</div></div>
+      <div class="stat"><div class="n">$3.7M</div><div class="l">churn value</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="step">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">01</span>
+      <h2 class="step-title">The question</h2>
+    </div>
+    <p>
+      Knowing how many customers churned each period is table stakes. The more useful
+      question is which customers are most likely to churn, and which specific factors
+      are actually driving that risk, so retention effort can be targeted at the right
+      accounts instead of applied as a blanket discount to everyone.
+    </p>
+  </div>
+</section>
+
+<section class="step">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">02</span>
+      <h2 class="step-title">The approach</h2>
+    </div>
+    <p>
+      Working from a telecom customer dataset covering contract type, tenure, monthly
+      charges, service add-ons and final status (stayed vs. churned), I cleaned and
+      prepared the data in Python, converting categorical service fields into a modelling-ready
+      format and engineering a customer value score from total revenue.
+    </p>
+    <p>
+      I then fit a logistic regression against churn status to isolate which factors
+      carry real predictive weight, rather than relying on intuition about what "should"
+      matter. The strongest drivers that came out of the model:
+    </p>
+    <ul>
+      <li>Month-to-month contracts, by a wide margin over annual contracts</li>
+      <li>Absence of online security or premium tech support add-ons</li>
+      <li>Fiber optic internet customers, who churned at a higher rate than DSL or cable</li>
+      <li>Customers with zero referrals, a weak but consistent signal</li>
+    </ul>
+    <div class="tag-row">
+      <span class="tag">Python</span>
+      <span class="tag">pandas</span>
+      <span class="tag">scikit-learn</span>
+      <span class="tag">Logistic Regression</span>
+      <span class="tag">Power BI</span>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">03</span>
+      <h2 class="step-title">The dashboard</h2>
+    </div>
+    <p>
+      The model's findings feed into an interactive Power BI dashboard for exploring
+      stayed vs. churned customers side by side, by revenue, contract type, subscription
+      rate and service usage, with drill-down filters by city, contract and offer.
+    </p>
+    <div class="embed-frame">
+      <!--
+        Replace the iframe src below with your own Power BI "Publish to web" embed link.
+        In Power BI Desktop: File → Embed report → Publish to web, then copy the src URL here.
+      -->
+      <iframe
+        src="REPLACE_WITH_YOUR_POWER_BI_EMBED_URL"
+        title="Telecom Customer Churn Dashboard"
+        allowfullscreen>
+      </iframe>
+      <div class="embed-caption">Interactive dashboard — filter by city, contract, offer and internet type.</div>
+    </div>
+    <div class="asset-links">
+      <a href="assets/churn-dashboard-summary.png">View summary page (image)</a>
+      <a href="assets/churn-dashboard.pdf">Download PDF export</a>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">04</span>
+      <h2 class="step-title">The notebook</h2>
+    </div>
+    <p>
+      The full data cleaning, feature engineering and model code is documented step by
+      step in the notebook below, including the churn risk and customer value scoring
+      logic used to build the dashboard's segmentation.
+    </p>
+    <div class="asset-links">
+      <a href="churn_analysis.ipynb">Open the analysis notebook</a>
+      <a href="https://github.com/your-username/telecom-churn-analysis" target="_blank" rel="noopener">View source on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="wrap">
+    <div class="step-head">
+      <span class="step-num">05</span>
+      <h2 class="step-title">Key finding</h2>
+    </div>
+    <div class="finding-box">
+      <p>Contract type outweighs every other factor: month-to-month customers churn at a far higher rate than annual subscribers, regardless of how much they spend.</p>
+      <p class="support">Practically, this points toward incentivising longer contract terms, rather than discounting price alone, as the highest-leverage retention lever available.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="../../index.html">← Back to portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>
