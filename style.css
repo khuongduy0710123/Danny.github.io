@@ -1,0 +1,5 @@
+body { font-family: -apple-system, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #222; }
+header { margin-bottom: 40px; }
+.project-card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.project-card h3 { margin: 0 0 8px; }
+a { color: #2E75B6; }
