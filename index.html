@@ -1,28 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Name | Data Analytics Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Danny Bui | Data Analytics Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#1A2233; --ink-soft:#4A5468; --paper:#F7F8FA; --panel:#FFFFFF;
+    --line:#E3E6EC; --teal:#2E9E86; --teal-soft:#E4F3EF; --orange:#D97046;
+    --serif:'Newsreader',Georgia,serif; --sans:'Inter',-apple-system,sans-serif;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); line-height:1.6;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+  a { color:var(--teal); text-decoration:none; border-bottom:1px solid transparent; }
+  a:hover { border-bottom-color:currentColor; }
+  .wrap { max-width:880px; margin:0 auto; padding:0 24px; }
+
+  nav.top { border-bottom:1px solid var(--line); padding:20px 0; position:sticky; top:0; background:var(--paper); z-index:10; }
+  nav.top .wrap { display:flex; justify-content:space-between; align-items:center; }
+  nav.top .brand { font-family:var(--serif); font-weight:600; font-size:18px; color:var(--ink); }
+  nav.top .links a { font-size:14px; font-weight:500; color:var(--ink-soft); margin-left:24px; }
+  nav.top .links a:hover { color:var(--ink); border-bottom-color:var(--ink); }
+
+  header.hero { padding:72px 0 48px; border-bottom:1px solid var(--line); }
+  .eyebrow { font-size:13px; color:var(--ink-soft); margin-bottom:16px; }
+  h1 { font-family:var(--serif); font-weight:500; font-size:44px; line-height:1.15; margin:0 0 20px; max-width:16ch; }
+  .dek { font-size:18px; color:var(--ink-soft); max-width:58ch; margin:0 0 28px; }
+  .stat-row { display:flex; gap:32px; flex-wrap:wrap; margin-top:32px; }
+  .stat { min-width:110px; margin-right:32px; }
+  .stat:last-child { margin-right:0; }
+  .stat .n { font-family:var(--serif); font-size:26px; font-weight:500; color:var(--teal); }
+  .stat .l { font-size:13px; color:var(--ink-soft); margin-top:2px; }
+
+  section.block { padding:56px 0; border-bottom:1px solid var(--line); }
+  section.block:last-of-type { border-bottom:none; }
+  .block-head { font-family:var(--serif); font-size:26px; font-weight:500; margin:0 0 10px; }
+  .block-sub { color:var(--ink-soft); max-width:60ch; margin:0 0 28px; }
+
+  .skill-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .skill-btn { font-size:13px; padding:6px 14px; border-radius:100px; background:var(--panel);
+    border:1px solid var(--line); color:var(--ink-soft); cursor:pointer; font-family:var(--sans); }
+  .skill-btn:hover { border-color:var(--ink); }
+  .skill-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+  .skill-hint { font-size:13px; color:var(--ink-soft); margin-top:10px; }
+
+  .project-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:8px; }
+  .project-card { border:1px solid var(--line); border-radius:8px; padding:22px; background:var(--panel);
+    transition:opacity .15s ease, border-color .15s ease; }
+  .project-card.dimmed { opacity:.35; }
+  .project-card.match { border-color:var(--teal); }
+  .project-card h3 { font-family:var(--serif); font-size:19px; font-weight:500; margin:0 0 8px; }
+  .project-card p { font-size:14px; color:var(--ink-soft); margin:0 0 14px; }
+  .project-card .tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .project-card .tags span { font-size:11px; padding:3px 9px; border-radius:100px; background:var(--teal-soft); color:var(--ink); }
+  .project-card a.cta { font-size:14px; font-weight:500; }
+
+  .timeline { border-left:2px solid var(--line); padding-left:24px; }
+  .role { margin-bottom:28px; position:relative; }
+  .role::before { content:''; position:absolute; left:-29px; top:6px; width:8px; height:8px; border-radius:50%; background:var(--teal); }
+  .role .title { font-weight:600; font-size:15px; }
+  .role .org { color:var(--ink-soft); font-size:14px; }
+  .role .dates { font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .role p { font-size:14px; color:var(--ink-soft); margin:8px 0 0; max-width:60ch; }
+
+  footer.contact { padding:56px 0 72px; text-align:center; }
+  footer.contact p { color:var(--ink-soft); margin-bottom:16px; }
+  footer.contact .links a { margin:0 12px; font-weight:500; }
+
+  @media (prefers-color-scheme:dark) {
+    :root:not([data-theme="light"]) { --ink:#E8ECF1; --ink-soft:#9AA5B5; --paper:#12161F; --panel:#191E2A; --line:#262C3A; --teal-soft:#16292A; }
+  }
+  :root[data-theme="dark"] { --ink:#E8ECF1; --ink-soft:#9AA5B5; --paper:#12161F; --panel:#191E2A; --line:#262C3A; --teal-soft:#16292A; }
+
+  @media (max-width:640px) {
+    h1 { font-size:32px; } .project-grid { grid-template-columns:1fr; }
+    nav.top .links a { margin-left:14px; font-size:13px; }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Your Name</h1>
-    <p>Data analytics projects built on real data, end to end.</p>
-  </header>
 
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="project-card">
-      <h3><a href="projects/churn-analysis/">Telecom Customer Churn Analysis</a></h3>
-      <p>Logistic regression + Power BI dashboard identifying key churn drivers.</p>
+<nav class="top">
+  <div class="wrap">
+    <span class="brand">Danny Bui</span>
+    <div class="links">
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
     </div>
-    <!-- add more project-card divs as you build more projects -->
-  </section>
+  </div>
+</nav>
 
-  <footer>
-    <p>Contact: your.email@example.com | <a href="https://linkedin.com/in/you">LinkedIn</a></p>
-  </footer>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Data &amp; Business Analytics</p>
+    <h1>Turning messy, real-world data into decisions people can act on</h1>
+    <p class="dek">
+      I'm a business analytics graduate who works across SQL, Python and Power BI to
+      answer questions that actually matter to a business, not just to build a dashboard.
+      Every project here is solved end to end on real data: a written case study, the
+      code behind it, and a working dashboard.
+    </p>
+    <div class="stat-row">
+      <div class="stat"><div class="n">4</div><div class="l">end-to-end projects</div></div>
+      <div class="stat"><div class="n">100K+</div><div class="l">records analysed</div></div>
+      <div class="stat"><div class="n">10+</div><div class="l">tools &amp; techniques used</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="projects">
+  <div class="wrap">
+    <h2 class="block-head">Projects</h2>
+    <p class="block-sub">Select a skill to see which projects use it.</p>
+
+    <div class="skill-row" id="skillRow">
+      <button class="skill-btn" data-skill="python">Python</button>
+      <button class="skill-btn" data-skill="sql">SQL</button>
+      <button class="skill-btn" data-skill="powerbi">Power BI</button>
+      <button class="skill-btn" data-skill="r">R</button>
+      <button class="skill-btn" data-skill="ml">Machine Learning</button>
+      <button class="skill-btn" data-skill="warehouse">Data Warehousing</button>
+    </div>
+    <p class="skill-hint" id="skillHint">Showing all projects.</p>
+
+    <div class="project-grid" id="projectGrid">
+      <div class="project-card" data-skills="python sql powerbi warehouse ml">
+        <h3>Telecom Customer Churn Analysis</h3>
+        <p>Logistic regression to identify real churn drivers, paired with an interactive Power BI dashboard comparing stayed vs. churned customers.</p>
+        <div class="tags"><span>Python</span><span>scikit-learn</span><span>Power BI</span></div>
+        <p style="margin-top:14px"><a class="cta" href="projects/churn-analysis/">View case study →</a></p>
+      </div>
+
+      <div class="project-card" data-skills="python sql powerbi warehouse">
+        <h3>Aviation Data Warehouse &amp; BI Dashboard</h3>
+        <p>Designed a PostgreSQL dimensional warehouse and Databricks/PySpark ETL pipeline for 98,000+ flight records, with Power BI reporting on performance and capacity.</p>
+        <div class="tags"><span>PySpark</span><span>PostgreSQL</span><span>Neo4j</span></div>
+        <p style="margin-top:14px"><a class="cta" href="#">View case study →</a></p>
+      </div>
+
+      <div class="project-card" data-skills="powerbi">
+        <h3>FCA Mortgage Sales Analysis</h3>
+        <p>Analysed 2017–2021 UK mortgage data to identify pricing, LTV and regional lending trends, with an interactive Power BI dashboard.</p>
+        <div class="tags"><span>Power BI</span><span>DAX</span></div>
+        <p style="margin-top:14px"><a class="cta" href="#">View case study →</a></p>
+      </div>
+
+      <div class="project-card" data-skills="r python">
+        <h3>Climate &amp; Living Quality, Bangladesh 1970–2020</h3>
+        <p>Built spatial data pipelines to merge MERRA-2 climate data with administrative boundaries, then modelled regional patterns in R.</p>
+        <div class="tags"><span>Geopandas</span><span>Xarray</span><span>R</span></div>
+        <p style="margin-top:14px"><a class="cta" href="#">View case study →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="experience">
+  <div class="wrap">
+    <h2 class="block-head">Experience</h2>
+    <div class="timeline">
+      <div class="role">
+        <div class="title">Data Analyst Assistant</div>
+        <div class="org">UWA Economic Research Department</div>
+        <div class="dates">Nov 2025 – Feb 2026</div>
+        <p>Built spatial data pipelines processing climate data across 50 years of records, cutting manual processing time by 80%.</p>
+      </div>
+      <div class="role">
+        <div class="title">Data Analyst Project Intern</div>
+        <div class="org">Meerilinga</div>
+        <div class="dates">Feb 2025 – May 2025</div>
+        <p>Built Power BI dashboards from 20 years of Census data, informing program planning that led to 70+ new registrations.</p>
+      </div>
+      <div class="role">
+        <div class="title">Market Research Coordinator</div>
+        <div class="org">Bain &amp; Company</div>
+        <div class="dates">Mar 2023</div>
+        <p>Coordinated 50+ structured interviews and analysed pricing and sales data to inform client recommendations.</p>
+      </div>
+      <div class="role">
+        <div class="title">Research Analyst Intern</div>
+        <div class="org">SSI Securities Corporation</div>
+        <div class="dates">Oct 2022 – Feb 2023</div>
+        <p>Delivered monthly Tableau-based briefings on macroeconomic and policy conditions, contributing to $1M in fund decisions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="contact" id="contact">
+  <div class="wrap">
+    <p>Open to data analyst and business analytics roles. Always happy to talk about a project.</p>
+    <div class="links">
+      <a href="mailto:khuongduy0710123@gmail.com">Email</a>
+      <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/khuongduy0710123" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const buttons = document.querySelectorAll('.skill-btn');
+  const cards = document.querySelectorAll('.project-card');
+  const hint = document.getElementById('skillHint');
+  let active = null;
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const skill = btn.dataset.skill;
+      if (active === skill) {
+        active = null;
+        buttons.forEach(b => b.classList.remove('active'));
+        cards.forEach(c => { c.classList.remove('dimmed','match'); });
+        hint.textContent = 'Showing all projects.';
+        return;
+      }
+      active = skill;
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.skill === skill));
+      cards.forEach(c => {
+        const has = c.dataset.skills.split(' ').includes(skill);
+        c.classList.toggle('match', has);
+        c.classList.toggle('dimmed', !has);
+      });
+      hint.textContent = 'Showing projects using ' + btn.textContent + '.';
+    });
+  });
+</script>
+
 </body>
 </html>
