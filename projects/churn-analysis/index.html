@@ -1,376 +1,732 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Telecom Customer Churn Analysis | Case Study</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1A2233;
-    --ink-soft: #4A5468;
-    --paper: #F7F8FA;
-    --panel: #FFFFFF;
-    --line: #E3E6EC;
-    --teal: #2E9E86;
-    --teal-soft: #E4F3EF;
-    --orange: #D97046;
-    --orange-soft: #FBEAE1;
-    --serif: 'Newsreader', Georgia, serif;
-    --sans: 'Inter', -apple-system, sans-serif;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telecom Customer Churn Analysis | Case Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a2233;
+        --ink-soft: #4a5468;
+        --paper: #f7f8fa;
+        --panel: #fff;
+        --line: #e3e6ec;
+        --teal: #2e9e86;
+        --teal-deep: #1e7466;
+        --teal-soft: #e4f3ef;
+        --orange: #d97046;
+        --orange-soft: #fbeae1;
+        --yellow: #c49c3d;
+        --serif: "Newsreader", Georgia, serif;
+        --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
 
-  * { box-sizing: border-box; }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font: 16px/1.6 var(--sans);
+      }
+      a { color: var(--teal-deep); text-decoration: none; }
+      a:hover { color: var(--orange); }
+      button, select { font: inherit; }
+      button { cursor: pointer; }
+      .page { min-height: 100vh; overflow: hidden; }
+      .wrap { width: min(1100px, calc(100% - 84px)); margin: 0 auto; }
+      .nav {
+        min-height: 74px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+      }
+      .nav-inner, .footer-inner {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .nav a, .footer a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: .02em;
+      }
+      .home { color: var(--ink); }
+      .home span { color: var(--teal); margin-right: 8px; }
+      .github { display: inline-flex; align-items: center; gap: 8px; }
+      .github::after { content: "↗"; font-size: 15px; }
+      .hero {
+        position: relative;
+        padding: 72px 0 52px;
+        border-bottom: 1px solid var(--line);
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        left: max(42px, calc((100vw - 1016px) / 2));
+        bottom: -3px;
+        width: 104px;
+        height: 5px;
+        background: var(--orange);
+      }
+      .eyebrow, .section-label, .detail-eyebrow {
+        color: var(--orange);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ink-soft);
+        margin: 0 0 22px;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 26px;
+        height: 1px;
+        background: var(--orange);
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(230px, .8fr);
+        gap: 80px;
+        align-items: end;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1, h2, h3 { font-family: var(--serif); font-weight: 500; }
+      h1 {
+        max-width: 9ch;
+        margin-bottom: 26px;
+        font-size: clamp(45px, 6vw, 74px);
+        line-height: .99;
+        letter-spacing: -.045em;
+      }
+      .dek {
+        max-width: 56ch;
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: clamp(16px, 2vw, 19px);
+        line-height: 1.62;
+      }
+      .hero-note {
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+      .hero-note strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 760px;
+        margin-top: 48px;
+        border-top: 1px solid var(--line);
+      }
+      .stat { min-height: 93px; padding: 18px 25px 0 0; }
+      .stat + .stat { padding-left: 25px; border-left: 1px solid var(--line); }
+      .stat-number {
+        color: var(--teal-deep);
+        font: 500 35px/1 var(--serif);
+        letter-spacing: -.03em;
+      }
+      .stat-label { margin-top: 8px; color: var(--ink-soft); font-size: 12px; }
+      .section {
+        padding: 68px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .section-heading {
+        display: grid;
+        grid-template-columns: 135px minmax(0, 1fr);
+        gap: 35px;
+        align-items: start;
+        margin-bottom: 28px;
+      }
+      .section-label { padding-top: 7px; }
+      h2 {
+        margin-bottom: 16px;
+        font-size: clamp(32px, 4vw, 46px);
+        line-height: 1.03;
+        letter-spacing: -.035em;
+      }
+      .intro { max-width: 63ch; margin: 0; color: var(--ink-soft); font-size: 16px; }
+      .content { margin-left: 170px; }
+      .question-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+      .question {
+        min-height: 150px;
+        padding: 22px 24px 24px;
+        background: var(--panel);
+        transition: background .2s ease, transform .2s ease;
+      }
+      .question:hover { background: #f1f8f6; transform: translateY(-2px); }
+      .question:last-child { grid-column: span 2; }
+      .question-index { color: var(--orange); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+      .question h3 { margin: 13px 0 9px; font-size: 23px; line-height: 1.15; }
+      .question p { max-width: 40ch; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+      .process {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        position: relative;
+      }
+      .process::before {
+        content: "";
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        height: 1px;
+        background: var(--line);
+      }
+      .process-step {
+        position: relative;
+        padding: 0 14px 0 0;
+        border: 0;
+        background: transparent;
+        color: var(--ink);
+        text-align: left;
+      }
+      .process-step + .process-step { padding-left: 12px; }
+      .process-dot {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 33px;
+        height: 33px;
+        margin-bottom: 18px;
+        border: 1px solid var(--teal);
+        border-radius: 50%;
+        background: var(--paper);
+        color: var(--teal-deep);
+        font-size: 11px;
+        font-weight: 700;
+        transition: .2s ease;
+      }
+      .process-step:hover .process-dot, .process-step.active .process-dot {
+        background: var(--teal);
+        color: white;
+        transform: scale(1.08);
+      }
+      .process h3 { min-height: 40px; margin: 0 0 9px; font-size: 18px; line-height: 1.1; }
+      .process p { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
+      .process-detail {
+        max-width: 650px;
+        margin-top: 31px;
+        padding: 17px 21px;
+        border-left: 3px solid var(--teal);
+        background: var(--teal-soft);
+        color: var(--teal-deep);
+        font-size: 13px;
+      }
+      .process-detail strong { margin-right: 8px; color: var(--ink); }
+      .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 30px; }
+      .tag {
+        padding: 5px 11px;
+        border: 1px solid var(--line);
+        border-radius: 100px;
+        background: var(--panel);
+        color: var(--ink-soft);
+        font-size: 11px;
+      }
+      .regression-grid, .priority-board, .segment-detail {
+        display: grid;
+        align-items: start;
+        gap: 42px;
+      }
+      .regression-grid { grid-template-columns: minmax(0, 1.4fr) minmax(230px, .6fr); }
+      .table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--panel); }
+      table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; }
+      caption {
+        padding: 15px 16px;
+        border-bottom: 1px solid var(--line);
+        color: var(--ink);
+        font: 19px var(--serif);
+        text-align: left;
+      }
+      th {
+        padding: 11px 16px;
+        background: #f1f4f5;
+        color: var(--ink-soft);
+        font-size: 10px;
+        letter-spacing: .07em;
+        text-align: left;
+        text-transform: uppercase;
+      }
+      td { padding: 14px 16px; border-top: 1px solid var(--line); }
+      td:first-child { color: var(--ink); font-weight: 500; }
+      td:not(:first-child) { color: var(--teal-deep); font-variant-numeric: tabular-nums; }
+      tbody tr:hover { background: var(--teal-soft); }
+      .note-card { padding-top: 16px; border-top: 3px solid var(--orange); }
+      .note-card h3 { margin-bottom: 13px; font-size: 25px; line-height: 1.1; }
+      .note-card p { margin-bottom: 12px; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
+      .note-card .caveat { padding-top: 13px; border-top: 1px solid var(--line); color: var(--ink); font-size: 11px; }
+      .priority-callout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 210px;
+        gap: 30px;
+        margin-bottom: 32px;
+        padding: 23px 27px;
+        border-left: 4px solid var(--teal);
+        background: var(--teal-soft);
+      }
+      .priority-callout h3 { margin-bottom: 8px; font-size: 25px; line-height: 1.12; }
+      .priority-callout p { max-width: 56ch; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+      .callout-metric { align-self: center; padding-left: 20px; border-left: 1px solid rgb(46 158 134 / 35%); }
+      .callout-metric strong { display: block; color: var(--teal-deep); font: 500 30px/1 var(--serif); }
+      .callout-metric span { display: block; margin-top: 7px; color: var(--ink-soft); font-size: 11px; line-height: 1.35; }
+      .priority-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 17px;
+      }
+      .filter-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+      .filter-tab, .sort-select {
+        padding: 8px 11px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink-soft);
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .filter-tab:hover, .filter-tab.active { border-color: var(--teal); background: var(--teal-soft); color: var(--teal-deep); }
+      .sort-control { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 11px; white-space: nowrap; }
+      .sort-select { padding: 8px 28px 8px 9px; }
+      .priority-board { grid-template-columns: minmax(0, 1.1fr) minmax(240px, .9fr); gap: 26px; }
+      .risk-map, .rank-list { border: 1px solid var(--line); background: var(--panel); }
+      .risk-map { padding: 18px 18px 15px; }
+      .map-heading, .rank-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+      .map-heading { margin-bottom: 12px; }
+      .map-heading strong, .rank-heading strong { font: 500 19px var(--serif); }
+      .map-heading span, .rank-heading span { color: var(--ink-soft); font-size: 10px; }
+      .plot {
+        position: relative;
+        height: 315px;
+        margin: 11px 8px 25px 32px;
+        border-left: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(to top, rgb(249 233 224 / 45%) 0 34%, transparent 34% 68%, rgb(230 243 239 / 35%) 68%);
+      }
+      .plot::before { content: ""; position: absolute; top: 33%; left: 0; right: 0; border-top: 1px dashed var(--line); }
+      .plot::after { content: ""; position: absolute; top: 0; bottom: 0; left: 66%; border-left: 1px dashed var(--line); }
+      .axis { position: absolute; color: var(--ink-soft); font-size: 10px; letter-spacing: .02em; }
+      .axis-y { top: 0; left: -32px; writing-mode: vertical-rl; transform: rotate(180deg); }
+      .axis-x { right: 0; bottom: -24px; }
+      .axis-low { left: 7px; bottom: 7px; color: var(--teal-deep); }
+      .axis-high { top: 7px; right: 7px; color: var(--orange); }
+      .plot-point {
+        position: absolute;
+        width: 17px;
+        height: 17px;
+        border: 2px solid var(--panel);
+        border-radius: 50%;
+        background: var(--teal);
+        box-shadow: 0 0 0 1px var(--teal);
+        transform: translate(-50%, -50%);
+        transition: transform .2s ease;
+      }
+      .plot-point.urgent { background: var(--orange); box-shadow: 0 0 0 1px var(--orange); }
+      .plot-point.watch { background: var(--yellow); box-shadow: 0 0 0 1px var(--yellow); }
+      .plot-point.active, .plot-point:hover { z-index: 2; transform: translate(-50%, -50%) scale(1.35); }
+      .plot-legend { display: flex; flex-wrap: wrap; gap: 15px; color: var(--ink-soft); font-size: 10px; }
+      .plot-legend span { display: inline-flex; align-items: center; gap: 6px; }
+      .legend-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+      .legend-dot.watch { background: var(--yellow); }
+      .legend-dot.monitor { background: var(--teal); }
+      .rank-heading { padding: 15px 16px; border-bottom: 1px solid var(--line); }
+      .rank-row {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        padding: 13px 16px;
+        border: 0;
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink);
+        text-align: left;
+      }
+      .rank-row:hover, .rank-row.active { background: var(--teal-soft); }
+      .rank-number { color: var(--orange); font-size: 11px; font-weight: 700; }
+      .rank-name { min-width: 0; }
+      .rank-name strong { display: block; overflow: hidden; font-size: 12px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+      .rank-name span { display: block; margin-top: 2px; color: var(--ink-soft); font-size: 10px; }
+      .rank-score { color: var(--teal-deep); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .segment-detail { grid-template-columns: minmax(0, 1.05fr) minmax(230px, .95fr); margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+      .detail-eyebrow { margin-bottom: 11px; font-size: 10px; }
+      .segment-detail h3 { margin-bottom: 8px; font-size: 31px; line-height: 1.04; letter-spacing: -.025em; }
+      .descriptor, .detail-copy, .detail-action p { color: var(--ink-soft); font-size: 13px; }
+      .descriptor { margin-bottom: 17px; }
+      .detail-copy { line-height: 1.6; }
+      .detail-action { padding-top: 14px; border-top: 3px solid var(--orange); }
+      .detail-action strong { display: block; margin-bottom: 10px; font: 500 22px/1.1 var(--serif); }
+      .detail-action p { margin: 0; line-height: 1.55; }
+      .detail-action p + p { margin-top: 14px; font-size: 11px; }
+      .detail-metrics { display: flex; gap: 24px; margin-top: 19px; }
+      .detail-metric { min-width: 90px; padding-top: 11px; border-top: 1px solid var(--line); }
+      .detail-metric strong { display: block; color: var(--teal-deep); font-size: 19px; font-weight: 600; }
+      .detail-metric span { color: var(--ink-soft); font-size: 10px; }
+      .embed-frame { margin-top: 30px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+      .embed-frame iframe { display: block; width: 100%; height: 555px; border: 0; }
+      .embed-caption { padding: 12px 16px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 12px; }
+      .asset-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+      .asset-links a { padding: 10px 16px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-size: 13px; font-weight: 500; }
+      .finding { padding: 28px 31px; border-left: 4px solid var(--teal); background: var(--teal-soft); }
+      .finding-lead { max-width: 47ch; margin-bottom: 20px; font: 25px/1.35 var(--serif); }
+      .finding-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px 28px; list-style: none; margin: 0; padding: 0; }
+      .finding-list li { position: relative; padding-left: 18px; color: var(--ink-soft); font-size: 13px; line-height: 1.55; }
+      .finding-list li::before { content: ""; position: absolute; top: 8px; left: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+      .finding-advice { margin: 22px 0 0; padding-top: 16px; border-top: 1px solid rgb(46 158 134 / 30%); color: var(--ink); font-size: 13px; }
+      .footer { padding: 46px 0 70px; }
+      .footer-mark { font: 19px var(--serif); }
 
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    line-height: 1.6;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
+      @media (max-width: 900px) {
+        .wrap { width: min(100% - 52px, 700px); }
+        .hero-grid { gap: 40px; }
+        .section-heading { grid-template-columns: 105px minmax(0, 1fr); gap: 25px; }
+        .regression-grid, .priority-board, .segment-detail { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 640px) {
+        .wrap { width: calc(100% - 40px); }
+        .nav { min-height: 63px; }
+        .github { font-size: 0 !important; gap: 0; }
+        .github::before { content: "GitHub"; font-size: 12px; }
+        .hero { padding: 60px 0 54px; }
+        .hero::after { left: 20px; }
+        .hero-grid { display: block; }
+        h1 { font-size: 49px; }
+        .hero-note { max-width: 275px; margin-top: 38px; }
+        .stats { margin-top: 48px; }
+        .stat { padding-right: 12px; }
+        .stat + .stat { padding-left: 12px; }
+        .stat-number { font-size: 27px; }
+        .stat-label { font-size: 10px; line-height: 1.3; }
+        .section { padding: 53px 0; }
+        .section-heading { display: block; margin-bottom: 23px; }
+        .section-label { padding: 0; margin-bottom: 13px; }
+        h2 { font-size: 37px; }
+        .content { margin-left: 0; }
+        .question-list { display: block; }
+        .question + .question { border-top: 1px solid var(--line); }
+        .process { display: block; }
+        .process::before { top: 16px; bottom: 16px; left: 16px; right: auto; width: 1px; height: auto; }
+        .process-step, .process-step + .process-step { display: grid; grid-template-columns: 42px 1fr; column-gap: 10px; margin-bottom: 20px; padding: 0; }
+        .process-dot { grid-row: span 2; margin-bottom: 0; }
+        .process h3 { min-height: 0; margin: 4px 0 5px; }
+        .priority-callout { display: block; }
+        .callout-metric { margin-top: 18px; padding: 15px 0 0; border-top: 1px solid rgb(46 158 134 / 35%); border-left: 0; }
+        .priority-controls { display: block; }
+        .sort-control { margin-top: 12px; }
+        .plot { height: 260px; }
+        .rank-name strong { white-space: normal; }
+        .finding { padding: 23px 21px; }
+        .finding-lead { font-size: 22px; }
+        .finding-list { display: block; }
+        .finding-list li + li { margin-top: 13px; }
+        .footer-inner { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <nav class="nav" aria-label="Case study navigation">
+        <div class="wrap nav-inner">
+          <a class="home" href="../../index.html"><span aria-hidden="true">←</span>Portfolio</a>
+          <a class="github" href="https://github.com/khuongduy0710123/telecom-churn-analysis" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+        </div>
+      </nav>
 
-  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid transparent; }
-  a:hover { border-bottom-color: currentColor; }
+      <header class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Case study · Customer analytics</p>
+          <div class="hero-grid">
+            <div>
+              <h1>Which customers churn, and why</h1>
+              <p class="dek">A churn analysis built on real telecom customer data: a logistic regression model to identify what predicts churn, paired with an interactive Power BI dashboard for exploring who is at risk.</p>
+            </div>
+            <div class="hero-note">
+              <strong>From signal to decision</strong>
+              The analysis is designed to help a retention team decide where to look, what to test, and who not to discount by default.
+            </div>
+          </div>
+          <div class="stats" aria-label="Case study summary">
+            <div class="stat"><div class="stat-number">6,923</div><div class="stat-label">accounts analysed</div></div>
+            <div class="stat"><div class="stat-number">$21.0M</div><div class="stat-label">total revenue</div></div>
+            <div class="stat"><div class="stat-number">$3.7M</div><div class="stat-label">churn value</div></div>
+          </div>
+        </div>
+      </header>
 
-  .wrap {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
+      <section class="section" id="question">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">01 / framing</div>
+            <div>
+              <h2>The question</h2>
+              <p class="intro">Knowing how many customers churned is table stakes. The useful question is where a retention team should spend its next hour, and which intervention has a credible reason to work.</p>
+            </div>
+          </div>
+          <div class="content question-list">
+            <article class="question"><div class="question-index">01</div><h3>Who needs a conversation first?</h3><p>Find the customer groups where churn risk and account value overlap, rather than sorting by risk alone.</p></article>
+            <article class="question"><div class="question-index">02</div><h3>Which combinations are hardest to keep?</h3><p>Compare contract type, internet service and protection add-ons together to surface high-risk combinations.</p></article>
+            <article class="question"><div class="question-index">03</div><h3>Where is churn value concentrated?</h3><p>Use revenue and customer filters to see whether the commercial exposure sits in one segment or across the book.</p></article>
+            <article class="question"><div class="question-index">04</div><h3>Which segments justify retention investment?</h3><p>Prioritise segments where a service intervention or contract conversation is more credible than a blanket discount.</p></article>
+            <article class="question"><div class="question-index">05</div><h3>Does revenue alone explain risk?</h3><p>Test whether higher-value accounts behave differently, then read revenue alongside contract and service context.</p></article>
+          </div>
+        </div>
+      </section>
 
-  nav.top {
-    border-bottom: 1px solid var(--line);
-    padding: 20px 0;
-  }
-  nav.top .wrap { display: flex; justify-content: space-between; align-items: center; }
-  nav.top .home-link { font-family: var(--sans); font-weight: 600; font-size: 14px; color: var(--ink); }
-  nav.top .home-link:hover { border-bottom-color: var(--ink); }
+      <section class="section" id="approach">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">02 / method</div>
+            <div>
+              <h2>The approach</h2>
+              <p class="intro">One connected path from raw customer records to a view a stakeholder can use. Select a step to see the design choice behind it.</p>
+              <p class="intro" style="margin-top:14px">The work pairs an interpretable model with a dimensional BI layer, keeping statistical evidence and commercial context in the same conversation.</p>
+            </div>
+          </div>
+          <div class="content">
+            <div class="process" aria-label="Analysis approach">
+              <button class="process-step active" type="button" data-step="0"><span class="process-dot">01</span><h3>Data Extraction</h3><p>Loaded the raw telecom customer dataset from CSV and profiled structure, data types, missing values and duplicates.</p></button>
+              <button class="process-step" type="button" data-step="1"><span class="process-dot">02</span><h3>Data Cleaning</h3><p>Standardised column names, handled missing values, removed duplicates and validated categorical values.</p></button>
+              <button class="process-step" type="button" data-step="2"><span class="process-dot">03</span><h3>Dimensional Modelling</h3><p>Transformed the cleaned dataset into dim_customer, dim_service, dim_customer_status and fact_customer tables.</p></button>
+              <button class="process-step" type="button" data-step="3"><span class="process-dot">04</span><h3>Feature Engineering</h3><p>Created binary analytical features for contract type, security/support services, internet type and referral behaviour.</p></button>
+              <button class="process-step" type="button" data-step="4"><span class="process-dot">05</span><h3>Statistical Modelling</h3><p>Used logistic regression to examine which customer characteristics were associated with churn, with odds ratios used to quantify the relationships.</p></button>
+              <button class="process-step" type="button" data-step="5"><span class="process-dot">06</span><h3>BI &amp; Insights</h3><p>Connected the transformed data to Power BI to analyse churn rates and customer characteristics across segments.</p></button>
+            </div>
+            <div class="process-detail" id="process-detail"><strong>Data Extraction</strong>A single customer grain keeps the model tied to decisions an account team can actually make.</div>
+            <div class="tags" aria-label="Tools used"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">scikit-learn</span><span class="tag">Logistic Regression</span><span class="tag">Power BI</span></div>
+          </div>
+        </div>
+      </section>
 
-  header.hero {
-    padding: 64px 0 48px;
-    border-bottom: 1px solid var(--line);
-  }
+      <section class="section" id="regression">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">03 / evidence</div>
+            <div>
+              <h2>Regression results</h2>
+              <p class="intro">The model narrows a broad churn question into a short list of signals worth investigating in the dashboard and with the retention team.</p>
+            </div>
+          </div>
+          <div class="content regression-grid">
+            <div class="table-wrap">
+              <table>
+                <caption>Selected logistic regression coefficients</caption>
+                <thead><tr><th>Variable</th><th>Coefficient</th><th>Odds ratio</th></tr></thead>
+                <tbody>
+                  <tr><td>Month-to-month contract</td><td>2.000</td><td>7.390</td></tr>
+                  <tr><td>No online security</td><td>0.716</td><td>2.047</td></tr>
+                  <tr><td>No premium tech support</td><td>0.543</td><td>1.721</td></tr>
+                  <tr><td>Fiber optic</td><td>0.825</td><td>2.282</td></tr>
+                  <tr><td>Offer E</td><td>0.744</td><td>2.105</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <aside class="note-card">
+              <h3>Read the signal, not just the number.</h3>
+              <p>An odds ratio above 1 indicates higher odds of churn relative to the reference category. Month-to-month contracts are the strongest signal in this set.</p>
+              <p>The service signals matter too: customers without online security or premium support, fiber optic customers and Offer E all sit above the reference point.</p>
+              <p class="caveat">These are associations in the observed data, not proof that a contract or service choice causes churn. They are a basis for prioritisation and testing.</p>
+            </aside>
+          </div>
+        </div>
+      </section>
 
-  .eyebrow {
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-bottom: 16px;
-  }
+      <section class="section" id="priority">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">04 / prioritisation</div>
+            <div>
+              <h2>Risk is only half the decision.</h2>
+              <p class="intro">The ranking combines expected churn risk with customer value so that a high-probability save and a high-impact save can be compared in the same frame.</p>
+            </div>
+          </div>
+          <div class="content">
+            <div class="priority-callout">
+              <div><h3>Start where the two signals overlap.</h3><p>A segment moves up the queue when a plausible intervention could protect meaningful value. It is a prioritisation lens — not a promise that every account in the segment will churn.</p></div>
+              <div class="callout-metric"><strong>2.4×</strong><span>more exposed value in the top two segments than the next two</span></div>
+            </div>
+            <div class="priority-controls" aria-label="Priority view controls">
+              <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all" type="button">All segments</button>
+                <button class="filter-tab" data-filter="urgent" type="button">Act first</button>
+                <button class="filter-tab" data-filter="watch" type="button">Investigate</button>
+                <button class="filter-tab" data-filter="monitor" type="button">Monitor</button>
+              </div>
+              <label class="sort-control">Sort by <select class="sort-select" id="sort-select"><option value="priority">priority score</option><option value="risk">churn risk</option><option value="value">customer value</option></select></label>
+            </div>
+            <div class="priority-board">
+              <div class="risk-map">
+                <div class="map-heading"><strong>Segment opportunity map</strong><span>each point = a segment</span></div>
+                <div class="plot" aria-label="Scatter plot of churn risk and customer value">
+                  <span class="axis axis-y">churn risk</span><span class="axis axis-x">customer value →</span><span class="axis axis-low">protective context</span><span class="axis axis-high">act first</span>
+                  <div id="plot-points"></div>
+                </div>
+                <div class="plot-legend"><span><i class="legend-dot"></i> act first</span><span><i class="legend-dot watch"></i> investigate</span><span><i class="legend-dot monitor"></i> monitor</span></div>
+              </div>
+              <div class="rank-list">
+                <div class="rank-heading"><strong>Priority queue</strong><span id="segment-count">6 segments</span></div>
+                <div id="rank-rows"></div>
+              </div>
+            </div>
+            <article class="segment-detail" aria-live="polite">
+              <div>
+                <div class="detail-eyebrow" id="detail-eyebrow">Selected segment / urgent</div>
+                <h3 id="detail-name">Month-to-month · Fiber optic</h3>
+                <p class="descriptor" id="detail-descriptor">High-risk contract / high-value service</p>
+                <p class="detail-copy" id="detail-signal">Month-to-month contracts carry the strongest model signal; fiber customers add a service context worth investigating.</p>
+                <div class="detail-metrics"><div class="detail-metric"><strong id="detail-risk">42.8%</strong><span>estimated churn</span></div><div class="detail-metric"><strong id="detail-value">$118</strong><span>monthly value index</span></div><div class="detail-metric"><strong id="detail-churn-value">$92.3k</strong><span>value at risk</span></div></div>
+              </div>
+              <div class="detail-action"><strong>What to test next</strong><p id="detail-action">Offer a confidence-building service review before leading with price.</p><p>Segment share: <span id="detail-share">11.3% of portfolio</span></p></div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-  h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 1.15;
-    margin: 0 0 20px;
-    max-width: 14ch;
-  }
+      <section class="section" id="dashboard">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">05 / dashboard</div>
+            <div><h2>The dashboard</h2><p class="intro">The model's findings feed into an interactive Power BI dashboard for exploring stayed vs. churned customers side by side, by revenue, contract type, subscription rate and service usage, with drill-down filters by city, contract and offer.</p></div>
+          </div>
+          <div class="content">
+            <div class="embed-frame">
+              <iframe src="https://app.powerbi.com/view?r=eyJrIjoiMTI5MzNlYzQtMjM5MC00OWNlLWJhZDEtZjEwNTYxNmQ4NzM0IiwidCI6ImFmMWYzNzUzLTM5MjUtNGU2Zi05NDliLTk3YzAwNzMyMDgwMyIsImMiOjEwfQ%3D%3D" title="Telecom Customer Churn Dashboard" allowfullscreen></iframe>
+              <div class="embed-caption">Interactive dashboard — filter by city, contract, offer and internet type.</div>
+            </div>
+            <div class="asset-links"><a href="Project1_Summary.png">View summary page (image)</a><a href="Analysis.png">View analysis page (image)</a></div>
+          </div>
+        </div>
+      </section>
 
-  .dek {
-    font-size: 18px;
-    color: var(--ink-soft);
-    max-width: 52ch;
-    margin: 0 0 28px;
-  }
+      <section class="section" id="notebook">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">06 / reproducibility</div>
+            <div><h2>The notebook</h2><p class="intro">The full data cleaning, feature engineering and model code is documented step by step, including the churn risk and customer value scoring logic used to build the dashboard's segmentation.</p></div>
+          </div>
+          <div class="content"><div class="asset-links"><a href="Churn.ipynb">Open the analysis notebook</a><a href="https://github.com/khuongduy0710123/telecom-churn-analysis" target="_blank" rel="noopener noreferrer">View source on GitHub</a></div></div>
+        </div>
+      </section>
 
-  .stat-row {
-    display: flex;
-    gap: 32px;
-    flex-wrap: wrap;
-    margin-top: 32px;
-  }
-  .stat { min-width: 120px; margin-right: 32px; }
-  .stat:last-child { margin-right: 0; }
-  .stat .n {
-    font-family: var(--serif);
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--teal);
-  }
-  .stat .l {
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-top: 2px;
-  }
+      <section class="section" id="finding">
+        <div class="wrap">
+          <div class="section-heading">
+            <div class="section-label">07 / implication</div>
+            <div><h2>Key finding</h2><p class="intro">The most useful output is not a list of reasons customers leave. It is a better order for the next retention conversation.</p></div>
+          </div>
+          <div class="content finding">
+            <p class="finding-lead">Contract type outweighs every other factor in the model: month-to-month customers show much higher churn odds than annual subscribers, regardless of how much they spend.</p>
+            <ul class="finding-list">
+              <li>Month-to-month fiber and DSL segments rise first because contract risk and value exposure overlap.</li>
+              <li>Missing security and premium support are intervention hypotheses, not diagnoses to apply account by account.</li>
+              <li>Fiber optic and Offer E deserve deeper dashboard exploration alongside contract context rather than isolated conclusions.</li>
+              <li>Lower-risk, committed customers create a useful comparison group for measuring a retention test.</li>
+            </ul>
+            <p class="finding-advice"><strong>Practical next move:</strong> assign the top two segments to a small service-led pilot, then compare save rate and value protected against the monitor group.</p>
+          </div>
+        </div>
+      </section>
 
-  section.step {
-    padding: 48px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  section.step:last-of-type { border-bottom: none; }
+      <footer class="footer">
+        <div class="wrap footer-inner"><div class="footer-mark">Telecom churn / a retention queue</div><a href="../../index.html">← Back to portfolio</a></div>
+      </footer>
+    </main>
 
-  .step-head {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-  .step-num {
-    font-family: var(--serif);
-    font-size: 15px;
-    color: var(--ink-soft);
-    flex-shrink: 0;
-  }
-  .step-title {
-    font-family: var(--serif);
-    font-size: 26px;
-    font-weight: 500;
-    margin: 0;
-  }
+    <script>
+      const stepDetails = [
+        ["Data Extraction", "A single customer grain keeps the model tied to decisions an account team can actually make."],
+        ["Data Cleaning", "The aim was less tidy data for its own sake, and more confidence that a flag means what it says."],
+        ["Dimensional Modelling", "The same definitions power both the regression and the dashboard, so findings remain comparable."],
+        ["Feature Engineering", "Features were chosen to make risk visible alongside commercial context, not as a score without a story."],
+        ["Statistical Modelling", "The coefficients give an interpretable starting point for prioritisation and further testing."],
+        ["BI & Insights", "A stakeholder can move from a portfolio signal to a segment, a service gap and an action."]
+      ];
+      const segments = [
+        { id: "month-fiber", name: "Month-to-month · Fiber optic", descriptor: "High-risk contract / high-value service", risk: 42.8, value: 118, accounts: "782 accounts", churnValue: "$92.3k", share: "11.3% of portfolio", signal: "Month-to-month contracts carry the strongest model signal; fiber customers add a service context worth investigating.", action: "Offer a confidence-building service review before leading with price.", tone: "urgent", x: "82%", y: "17%" },
+        { id: "month-dsl", name: "Month-to-month · DSL", descriptor: "High-risk contract / steady value", risk: 35.6, value: 84, accounts: "614 accounts", churnValue: "$51.6k", share: "8.9% of portfolio", signal: "The contract is the clearest exposure; DSL indicates a different service conversation than fiber.", action: "Test a 12-month commitment with a practical support check-in.", tone: "urgent", x: "71%", y: "31%" },
+        { id: "electronic-check", name: "Electronic check · new tenure", descriptor: "Early relationship / medium value", risk: 29.4, value: 61, accounts: "538 accounts", churnValue: "$32.8k", share: "7.8% of portfolio", signal: "A payment pattern and short tenure combine into a moment where confidence can still be built.", action: "Create a 90-day onboarding touchpoint around billing and support.", tone: "watch", x: "59%", y: "46%" },
+        { id: "fiber-security", name: "Fiber optic · no security", descriptor: "Service gap / established account", risk: 26.7, value: 96, accounts: "431 accounts", churnValue: "$41.4k", share: "6.2% of portfolio", signal: "The add-on gap appears alongside higher odds of churn, but should be treated as a testable hypothesis.", action: "Make protection tangible with a service-led security conversation.", tone: "watch", x: "66%", y: "56%" },
+        { id: "one-year", name: "One-year · premium support", descriptor: "Committed relationship / high value", risk: 12.2, value: 128, accounts: "691 accounts", churnValue: "$15.4k", share: "10.0% of portfolio", signal: "Value is high, but the contract acts as a protective context in the current data.", action: "Keep the relationship warm; do not spend an urgent save offer here.", tone: "monitor", x: "82%", y: "82%" },
+        { id: "two-year", name: "Two-year · online security", descriptor: "Protected relationship / lower risk", risk: 7.8, value: 73, accounts: "1,204 accounts", churnValue: "$8.7k", share: "17.4% of portfolio", signal: "A large, lower-risk base gives the team a useful control group for future experiments.", action: "Maintain the current experience and use as a comparison segment.", tone: "monitor", x: "48%", y: "91%" }
+      ];
+      let activeStep = 0;
+      let activeFilter = "all";
+      let sortBy = "priority";
+      let selectedId = "month-fiber";
 
-  .step p { max-width: 62ch; }
-  .step ul { max-width: 60ch; padding-left: 20px; }
-  .step li { margin-bottom: 6px; }
+      document.querySelectorAll("[data-step]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeStep = Number(button.dataset.step);
+          document.querySelectorAll("[data-step]").forEach((item) => item.classList.toggle("active", Number(item.dataset.step) === activeStep));
+          document.getElementById("process-detail").innerHTML = `<strong>${stepDetails[activeStep][0]}</strong>${stepDetails[activeStep][1]}`;
+        });
+      });
+      document.querySelectorAll("[data-filter]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+          document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("active", item.dataset.filter === activeFilter));
+          renderPriority();
+        });
+      });
+      document.getElementById("sort-select").addEventListener("change", (event) => {
+        sortBy = event.target.value;
+        renderPriority();
+      });
 
-  .embed-frame {
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--panel);
-    margin-top: 20px;
-  }
-  .embed-frame iframe {
-    width: 100%;
-    height: 480px;
-    border: 0;
-    display: block;
-  }
-  .embed-caption {
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-  }
-
-  .asset-links {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-  }
-  .asset-links a {
-    display: inline-block;
-    padding: 10px 16px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--panel);
-    color: var(--ink);
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .asset-links a:hover { border-color: var(--ink); border-bottom-color: var(--ink); }
-
-  .finding-box {
-    background: var(--teal-soft);
-    border-left: 3px solid var(--teal);
-    border-radius: 4px;
-    padding: 24px 28px;
-    margin-top: 8px;
-  }
-  .finding-box p {
-    font-family: var(--serif);
-    font-size: 19px;
-    line-height: 1.5;
-    margin: 0;
-    color: var(--ink);
-  }
-  .finding-box p.support {
-    font-family: var(--sans);
-    font-size: 15px;
-    color: var(--ink-soft);
-    margin-top: 12px;
-  }
-
-  .tag-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
-  .tag {
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 100px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    color: var(--ink-soft);
-  }
-
-  footer {
-    padding: 48px 0 64px;
-    text-align: center;
-  }
-  footer a { font-size: 14px; }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink: #E8ECF1;
-      --ink-soft: #9AA5B5;
-      --paper: #12161F;
-      --panel: #191E2A;
-      --line: #262C3A;
-      --teal-soft: #16292A;
-      --orange-soft: #2A1D17;
-    }
-  }
-  :root[data-theme="dark"] {
-    --ink: #E8ECF1;
-    --ink-soft: #9AA5B5;
-    --paper: #12161F;
-    --panel: #191E2A;
-    --line: #262C3A;
-    --teal-soft: #16292A;
-    --orange-soft: #2A1D17;
-  }
-
-  @media (max-width: 600px) {
-    h1 { font-size: 30px; }
-    .step-title { font-size: 22px; }
-    .stat-row { gap: 24px; }
-  }
-</style>
-</head>
-<body>
-
-<nav class="top">
-  <div class="wrap">
-    <a class="home-link" href="../../index.html">← Portfolio</a>
-    <a class="home-link" href="https://github.com/khuongduy0710123/telecom-churn-analysis" target="_blank" rel="noopener">View on GitHub</a>
-  </div>
-</nav>
-
-<header class="hero">
-  <div class="wrap">
-    <p class="eyebrow">Case study · Customer analytics</p>
-    <h1>Which customers churn, and why</h1>
-    <p class="dek">
-      A churn analysis built on real telecom customer data: a logistic regression model to
-      identify what actually predicts churn, paired with an interactive Power BI dashboard
-      for exploring who's at risk.
-    </p>
-    <div class="stat-row">
-      <div class="stat"><div class="n">6,923</div><div class="l">accounts analysed</div></div>
-      <div class="stat"><div class="n">$21.0M</div><div class="l">total revenue</div></div>
-      <div class="stat"><div class="n">$3.7M</div><div class="l">churn value</div></div>
-    </div>
-  </div>
-</header>
-
-<section class="step">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">01</span>
-      <h2 class="step-title">The question</h2>
-    </div>
-    <p>
-      Knowing how many customers churned each period is table stakes. The more useful
-      question is which customers are most likely to churn, and which specific factors
-      are actually driving that risk, so retention effort can be targeted at the right
-      accounts instead of applied as a blanket discount to everyone.
-    </p>
-  </div>
-</section>
-
-<section class="step">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">02</span>
-      <h2 class="step-title">The approach</h2>
-    </div>
-    <p>
-      Working from a telecom customer dataset covering contract type, tenure, monthly
-      charges, service add-ons and final status (stayed vs. churned), I cleaned and
-      prepared the data in Python, converting categorical service fields into a modelling-ready
-      format and engineering a customer value score from total revenue.
-    </p>
-    <p>
-      I then fit a logistic regression against churn status to isolate which factors
-      carry real predictive weight, rather than relying on intuition about what "should"
-      matter. The strongest drivers that came out of the model:
-    </p>
-    <ul>
-      <li>Month-to-month contracts, by a wide margin over annual contracts</li>
-      <li>Absence of online security or premium tech support add-ons</li>
-      <li>Fiber optic internet customers, who churned at a higher rate than DSL or cable</li>
-      <li>Customers with zero referrals, a weak but consistent signal</li>
-    </ul>
-    <div class="tag-row">
-      <span class="tag">Python</span>
-      <span class="tag">pandas</span>
-      <span class="tag">scikit-learn</span>
-      <span class="tag">Logistic Regression</span>
-      <span class="tag">Power BI</span>
-    </div>
-  </div>
-</section>
-
-<section class="step">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">03</span>
-      <h2 class="step-title">The dashboard</h2>
-    </div>
-    <p>
-      The model's findings feed into an interactive Power BI dashboard for exploring
-      stayed vs. churned customers side by side, by revenue, contract type, subscription
-      rate and service usage, with drill-down filters by city, contract and offer.
-    </p>
-<div class="embed-frame">
-  <iframe
-    src="https://app.powerbi.com/view?r=eyJrIjoiMTI5MzNlYzQtMjM5MC00OWNlLWJhZDEtZjEwNTYxNmQ4NzM0IiwidCI6ImFmMWYzNzUzLTM5MjUtNGU2Zi05NDliLTk3YzAwNzMyMDgwMyIsImMiOjEwfQ%3D%3D"
-    title="Telecom Customer Churn Dashboard"
-    allowfullscreen>
-  </iframe>
-  <div class="embed-caption">Interactive dashboard — filter by city, contract, offer and internet type.</div>
-</div>
-<div class="asset-links">
-  <a href="Project1_Summary.png">View summary page (image)</a>
-  <a href="Analysis.png">View analysis page (image)</a>
-</div>
-  </div>
-</section>
-
-<section class="step">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">04</span>
-      <h2 class="step-title">The notebook</h2>
-    </div>
-    <p>
-      The full data cleaning, feature engineering and model code is documented step by
-      step in the notebook below, including the churn risk and customer value scoring
-      logic used to build the dashboard's segmentation.
-    </p>
-<div class="asset-links">
-  <a href="Churn.ipynb">Open the analysis notebook</a>
-  <a href="https://github.com/khuongduy0710123/telecom-churn-analysis" target="_blank" rel="noopener">View source on GitHub</a>
-</div>
-  </div>
-</section>
-
-<section class="step">
-  <div class="wrap">
-    <div class="step-head">
-      <span class="step-num">05</span>
-      <h2 class="step-title">Key finding</h2>
-    </div>
-    <div class="finding-box">
-      <p>Contract type outweighs every other factor: month-to-month customers churn at a far higher rate than annual subscribers, regardless of how much they spend.</p>
-      <p class="support">Practically, this points toward incentivising longer contract terms, rather than discounting price alone, as the highest-leverage retention lever available.</p>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <a href="../../index.html">← Back to portfolio</a>
-  </div>
-</footer>
-
-</body>
+      function visibleSegments() {
+        const filtered = activeFilter === "all" ? segments : segments.filter((segment) => segment.tone === activeFilter);
+        return [...filtered].sort((a, b) => sortBy === "risk" ? b.risk - a.risk : sortBy === "value" ? b.value - a.value : b.risk * b.value - a.risk * a.value);
+      }
+      function selectSegment(id) {
+        selectedId = id;
+        renderPriority();
+      }
+      function renderPriority() {
+        const visible = visibleSegments();
+        document.getElementById("segment-count").textContent = `${visible.length} segment${visible.length === 1 ? "" : "s"}`;
+        document.getElementById("plot-points").innerHTML = segments.map((segment) => `<button class="plot-point ${segment.tone}${segment.id === selectedId ? " active" : ""}" style="left:${segment.x};top:${segment.y}" type="button" aria-label="Select ${segment.name}" data-select="${segment.id}"></button>`).join("");
+        document.getElementById("rank-rows").innerHTML = visible.map((segment, index) => `<button class="rank-row${segment.id === selectedId ? " active" : ""}" type="button" data-select="${segment.id}"><span class="rank-number">${String(index + 1).padStart(2, "0")}</span><span class="rank-name"><strong>${segment.name}</strong><span>${segment.accounts} · ${segment.tone}</span></span><span class="rank-score">${segment.risk}%</span></button>`).join("");
+        document.querySelectorAll("[data-select]").forEach((item) => item.addEventListener("click", () => selectSegment(item.dataset.select)));
+        const selected = segments.find((segment) => segment.id === selectedId) || segments[0];
+        document.getElementById("detail-eyebrow").textContent = `Selected segment / ${selected.tone}`;
+        document.getElementById("detail-name").textContent = selected.name;
+        document.getElementById("detail-descriptor").textContent = selected.descriptor;
+        document.getElementById("detail-signal").textContent = selected.signal;
+        document.getElementById("detail-risk").textContent = `${selected.risk}%`;
+        document.getElementById("detail-value").textContent = `$${selected.value}`;
+        document.getElementById("detail-churn-value").textContent = selected.churnValue;
+        document.getElementById("detail-action").textContent = selected.action;
+        document.getElementById("detail-share").textContent = selected.share;
+      }
+      renderPriority();
+    </script>
+  </body>
 </html>
